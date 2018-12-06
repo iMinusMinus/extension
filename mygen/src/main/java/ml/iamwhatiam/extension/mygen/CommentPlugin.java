@@ -20,10 +20,16 @@ public class CommentPlugin extends PluginAdapter {
     }
 
     @Override
+    public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        topLevelClass.addJavaDocLine(introspectedTable.getRemarks());
+        return true;
+    }
+
+    @Override
     public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass,
                                        IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable,
                                        ModelClassType modelClassType) {
         field.addJavaDocLine(introspectedColumn.getRemarks());
-        return false;
+        return true;
     }
 }
