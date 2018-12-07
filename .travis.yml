@@ -1,0 +1,18 @@
+language: java
+jdk:
+  - oraclejdk8
+  - openjdk7
+  - openjdk8
+
+branches:
+  only:
+  - master
+
+install:
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+
+before_script:
+
+script:
+  - jdk_switcher use oraclejdk8
+  - mvn test -B
