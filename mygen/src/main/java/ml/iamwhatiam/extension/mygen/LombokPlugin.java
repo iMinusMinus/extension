@@ -26,7 +26,7 @@ public class LombokPlugin extends PluginAdapter {
 
     private static final String DATA = "lombok.Data";
 
-    public boolean validate(List<String> list) {
+    public boolean validate(List<String> warnings) {
         return true;
     }
 
@@ -52,57 +52,36 @@ public class LombokPlugin extends PluginAdapter {
     public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass,
                                               IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable,
                                               ModelClassType modelClassType) {
-        return !StringUtility.isTrue(getProperties().getProperty(DATA)) && !StringUtility.isTrue(getProperties().getProperty(GETTER));
+        return false;
     }
 
     @Override
     public boolean modelSetterMethodGenerated(Method method, TopLevelClass topLevelClass,
                                               IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable,
                                               ModelClassType modelClassType) {
-        return !StringUtility.isTrue(getProperties().getProperty(DATA)) && ! StringUtility.isTrue(getProperties().getProperty(SETTER));
+        return false;
     }
 
     protected void generateLombok(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         if(StringUtility.isTrue(getProperties().getProperty(DATA))) {
-            topLevelClass.addImportedType(DATA);
-            topLevelClass.getAnnotations().add(getSimpleName(DATA));
+            generate(topLevelClass, DATA);
             return;
         }
-        generateGetter(topLevelClass, introspectedTable);
-        generateSetter(topLevelClass, introspectedTable);
-        generateToString(topLevelClass, introspectedTable);
-    }
-
-    protected void generateGetter(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        if(StringUtility.isTrue(getProperties().getProperty(GETTER))) {
-            topLevelClass.addImportedType(GETTER);
-            topLevelClass.getAnnotations().add(getSimpleName(GETTER));
-        }
-    }
-
-    protected void generateSetter(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        if(StringUtility.isTrue(getProperties().getProperty(SETTER))) {
-            topLevelClass.addImportedType(SETTER);
-            topLevelClass.getAnnotations().add(getSimpleName(SETTER));
-        }
-    }
-
-    protected void generateEqualsAndHashCode(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        generate(topLevelClass, GETTER);
+        generate(topLevelClass, SETTER);
         if(StringUtility.isTrue(getProperties().getProperty(EQUALS_AND_HASHCODE))) {
-            topLevelClass.addImportedType(EQUALS_AND_HASHCODE);
-            topLevelClass.getAnnotations().add(getSimpleName(EQUALS_AND_HASHCODE));
+            generate(topLevelClass, EQUALS_AND_HASHCODE);
         }
+        generate(topLevelClass, TO_STRING);
     }
 
-    protected void generateToString(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        if(StringUtility.isTrue(getProperties().getProperty(TO_STRING))) {
-            topLevelClass.addImportedType(TO_STRING);
-            topLevelClass.getAnnotations().add(getSimpleName(TO_STRING));
-        }
+    protected void generate(TopLevelClass topLevelClass, String fqcn) {
+        topLevelClass.addImportedType(fqcn);
+        topLevelClass.getAnnotations().add(asAnnotation(fqcn));
     }
 
-    private String getSimpleName(String fqcn) {
-        return fqcn.substring(fqcn.lastIndexOf(".") + 1);
+    private String asAnnotation(String fqcn) {
+        return "@" + fqcn.substring(fqcn.lastIndexOf(".") + 1);
     }
 
 }
