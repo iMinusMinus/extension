@@ -1,0 +1,25 @@
+# Platform
+## Mac
+.DS_Store
+._*
+
+## Windows
+[Dd]esktop.ini
+Thumbs.db
+
+
+# IDE
+## Eclipse
+.settings/
+.externalToolBuilders/
+.classpath
+.project
+
+## IDEA
+.idea/
+*.iml
+
+# Other
+target/
+hs_err_pid*
+*.log

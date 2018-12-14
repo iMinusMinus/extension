@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <properties resource="file:///D:/Workspaces/extension/mygen/src/test/resources/generatorConfig.properties" />
+    <context id="mygen" targetRuntime="ml.iamwhatiam.extension.mygen.IntrospectedTableTemplateImpl">
+        <jdbcConnection driverClass="${spring.datasource.driverClassName}" connectionURL="${spring.datasource.url}" userId="${spring.datasource.username}" password="${spring.datasource.password}" />
+        <javaModelGenerator targetPackage="ml.iamwhatiam.autogen.domain" targetProject="src/test/java">
+            <property name="rootClass" value="ml.iamwhatiam.AbstractEntity" />
+        </javaModelGenerator>
+        <sqlMapGenerator targetPackage="ml.iamwhatiam.autogen.dao"  targetProject="src/test/resources/">
+        </sqlMapGenerator>
+        <javaClientGenerator type="XMLMAPPER" targetPackage="ml.iamwhatiam.autogen.dao"  targetProject="src/test/java">
+        </javaClientGenerator>
+        <table tableName="t_test" domainObjectName="TestDomain"></table>
+    </context>
+</generatorConfiguration>
