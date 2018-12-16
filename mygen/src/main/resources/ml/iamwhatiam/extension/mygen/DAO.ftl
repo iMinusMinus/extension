@@ -3,14 +3,15 @@ package ${javaClientInterfacePackage};
 import java.util.List;
 
 <#assign props = context.javaClientGeneratorConfiguration.properties>
-<#assign rootInterface>
+<#assign rootInterfaceName>
 <#if tableConfiguration.properties.rootInterface??>
 <#t>${tableConfiguration.properties.rootInterface}
 <#elseif props.rootInterface??>
 <#t>${props.rootInterface}
 </#if>
 </#assign>
-<#if rootInterface?trim?length != 0>
+<#assign rootInterface = rootInterfaceName?trim>
+<#if rootInterface?length gt 0>
 import ${rootInterface};
 
 </#if>
@@ -34,11 +35,14 @@ import ${rootInterface};
 import ${javaModelPackage}.${domainObjectName};
 
 </#if>
-<#if props.annotationClass??>
-import ${props.annotationClass};
+<#if props.markerInterface  != null && props.markerInterface != rootInterface>
+import ${props.markerInterface};
 
 </#if>
 import org.apache.ibatis.annotations.Param;
+<#if props.annotationClass??>
+import ${props.annotationClass};
+</#if>
 
 /**
  * @author <#if context.properties.author??>${context.properties.author}<#else>mbg.generated</#if>
@@ -51,18 +55,28 @@ import org.apache.ibatis.annotations.Param;
 <#if props.annotationClass??>
 @${props.annotationClass?substring(props.annotationClass?last_index_of(".") + 1)}
 </#if>
-public interface ${javaClientInterfaceName} <#if rootInterface?trim?length != 0>extends ${rootInterface?substring(rootInterface?last_index_of(".") + 1)} </#if>{
+public interface ${javaClientInterfaceName} <#if props.markerInterface != null || rootInterface?length gt 0>extends ${props.markerInterface?substring(props.markerInterface?last_index_of(".") + 1)}<#if props.markerInterface != rootInterface>, ${rootInterface?substring(rootInterface?last_index_of(".") + 1)}</#if> </#if>{
 
+<#if tableConfiguration.insertStatementEnabled>
     int ${props.insertStatementId ! insertStatementId}(${domainObjectName} record);
 
     int ${props.insertSelectiveStatementId ! insertSelectiveStatementId}(${domainObjectName} record);
 
+</#if>
+<#if tableConfiguration.deleteByPrimaryKeyStatementEnabled>
     int ${props.deleteByPrimaryKeyStatementId ! deleteByPrimaryKeyStatementId}(${domainObjectName} key);
 
+</#if>
+<#if tableConfiguration.deleteByExampleStatementEnabled>
     int ${props.deleteByExampleStatementId ! deleteByExampleStatementId}(${domainObjectName} example);
 
+</#if>
+<#if tableConfiguration.updateByPrimaryKeyStatementEnabled>
     int ${props.updateByPrimaryKeyStatementId ! updateByPrimaryKeyStatementId}(@Param("record") ${domainObjectName} record, @Param("example") ${domainObjectName} example);
 
+    int ${props.updateByPrimaryKeySelectiveStatementId ! updateByPrimaryKeySelectiveStatementId}(@Param("record") ${domainObjectName} record, @Param("example") ${domainObjectName} example);
+</#if>
+<#if tableConfiguration.updateByExampleStatementEnabled>
     int ${props.updateByExampleSelectiveStatementId ! updateByExampleSelectiveStatementId}(@Param("record") ${domainObjectName} record, @Param("example") ${domainObjectName} example);
 <#--
     int ${props.updateByPrimaryKeyWithBLOBsStatementId ! updateByPrimaryKeyWithBLOBsStatementId}(@Param("record") ${domainObjectName} record, @Param("example") ${domainObjectName} example);
@@ -70,22 +84,27 @@ public interface ${javaClientInterfaceName} <#if rootInterface?trim?length != 0>
 
     int ${props.updateByExampleStatementId ! updateByExampleStatementId}(@Param("record") ${domainObjectName} record, @Param("example") ${domainObjectName} example);
 
-    int ${props.updateByPrimaryKeySelectiveStatementId ! updateByPrimaryKeySelectiveStatementId}(@Param("record") ${domainObjectName} record, @Param("example") ${domainObjectName} example);
+</#if>
 <#-- Domain = BlobRecord
     int ${props.updateByExampleWithBLOBsStatementId ! updateByExampleWithBLOBsStatementId}(@Param("record") ${domainObjectName} record, @Param("example") ${domainObjectName} example);
 -->
-
+<#if tableConfiguration.selectByPrimaryKeyStatementEnabled>
     ${domainObjectName} ${props.selectByPrimaryKeyStatementId ! selectByPrimaryKeyStatementId}(${domainObjectName} key);
 
+</#if>
+<#if tableConfiguration.countByExampleStatementEnabled>
 <#if context.javaClientGeneratorConfiguration.configurationType == 'ANNOTATEDMAPPER'>
     @@SelectProvider(type=${domainObjectName}SqlProvider.class, method="countByExample")
 </#if>
     long ${props.countByExampleStatementId ! countByExampleStatementId}(${domainObjectName} example);
 
+</#if>
+<#if tableConfiguration.selectByExampleStatementEnabled>
     List<${domainObjectName}> ${props.selectByExampleStatementId ! selectByExampleStatementId}(${domainObjectName} example);
 
     List<${domainObjectName}> ${props.selectByExampleWithBLOBsStatementId ! selectByExampleWithBLOBsStatementId}(${domainObjectName} example);
 <#--
     List<${domainObjectName}> <#if props.selectAllStatementId??>${props.selectAllStatementId}<#else>${selectAllStatementId}</#if>();
 -->
+</#if>
 }

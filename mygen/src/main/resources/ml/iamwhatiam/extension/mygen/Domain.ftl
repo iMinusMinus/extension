@@ -44,7 +44,7 @@ import lombok.ToString;
 </#if>
 </#assign>
 /**
- * ${remarks}
+ * <#if remarks??>${remarks}</#if>
  *
  * @author <#if context.properties.author??>${context.properties.author}<#else>mbg.generated</#if>
  * @date ${.now?date}
@@ -58,7 +58,7 @@ public class ${domainObjectName} <#if superClass?trim?length gt 0>extends ${supe
 
 <#list allColumns as column>
     /**
-     * ${column.remarks}
+     * <#if column.remarks??>${column.remarks}</#if>
      */
     private ${column.fullyQualifiedJavaType.shortNameWithoutTypeArguments} ${column.javaProperty};
 

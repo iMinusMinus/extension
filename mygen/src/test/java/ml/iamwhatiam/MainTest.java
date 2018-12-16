@@ -17,7 +17,7 @@ public class MainTest {
         Properties props = new Properties();
 //        props.put("user", "SA");
 //        props.put("password", "");
-        Connection con = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost:9001/xdb", props);
+        Connection con = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost:9001/xdb;ifexists=true", props);
         con.setAutoCommit(false);
         Statement s = con.createStatement();
         s.execute("CREATE TABLE T_TEST (ID BIGINT, BEFORE CLOB, AFTER CLOB, CREATOR VARCHAR(16), creation_date TIMESTAMP, revisor VARCHAR(16), revision_date TIMESTAMP)");
@@ -26,12 +26,12 @@ public class MainTest {
         while (rs.next()) {
             System.out.println(rs.getLong(1));
         }
-        s.execute("DROP TABLE T_TEST");
+//        s.execute("DROP TABLE T_TEST");
         rs.close();
         s.close();
         con.commit();
         con.close();
-        Connection c = DriverManager.getConnection(
-                "jdbc:hsqldb:file:db/xdb;shutdown=true", "SA", "");
+//        Connection c = DriverManager.getConnection(
+//                "jdbc:hsqldb:file:db/xdb;shutdown=true", "SA", "");
     }
 }

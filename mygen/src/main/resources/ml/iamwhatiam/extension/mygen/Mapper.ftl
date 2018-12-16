@@ -26,10 +26,10 @@
 </#if>
     <sql id="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}">
 <#list primaryKeyColumns as column>
-    <#lt>${column.actualColumnName}, <#rt>
+    <#lt>${column.actualColumnName},
 </#list>
 <#list baseColumns as column>
-    <#lt>${column.actualColumnName}<#sep>, <#rt>
+    <#lt>${column.actualColumnName}<#sep>,
 </#list>
     </sql>
 <#if BLOBColumns?size gt 0>
@@ -39,6 +39,8 @@
     </#list>
     </sql>
 </#if>
+
+<#if tableConfiguration.selectByExampleStatementEnabled>
     <select id="${props.selectByExampleWithBLOBsStatementId ! selectByExampleWithBLOBsStatementId}" parameterType="${javaModelPackage}.${domainObjectName}" resultMap="${context.sqlMapGeneratorConfiguration.properties.resultMapWithBLOBsId ! resultMapWithBLOBsId}">
         SELECT <include ref="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" /><#if BLOBColumns?size gt 0>, <include ref="${context.sqlMapGeneratorConfiguration.properties.blobColumnListId ! blobColumnListId}" /></#if>
           FROM ${tableConfiguration.tableName}
@@ -50,6 +52,7 @@
             </#list>
         </where>
     </select>
+
     <select id="${props.selectByExampleStatementId ! selectByExampleStatementId}" resultMap="${context.sqlMapGeneratorConfiguration.properties.baseResultMapId ! baseResultMapId}" parameterType="${javaModelPackage}.${domainObjectName}">
         SELECT <include ref="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" />
           FROM ${tableConfiguration.tableName}
@@ -61,18 +64,24 @@
             </#list>
         </where>
     </select>
+</#if>
 
+<#if tableConfiguration.selectByPrimaryKeyStatementEnabled>
     <select id="${props.selectByPrimaryKeyStatementId ! selectByPrimaryKeyStatementId}" parameterType="${javaModelPackage}.${domainObjectName}" resultMap="${context.sqlMapGeneratorConfiguration.properties.resultMapWithBLOBsId ! resultMapWithBLOBsId}">
         SELECT <include ref="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" /><#if BLOBColumns?size gt 0>, <include ref="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" /></#if>
           FROM ${tableConfiguration.tableName}
          WHERE <#list primaryKeyColumns as key>${key.actualColumnName} = <#noparse>#{</#noparse>key.javaProperty},${key.jdbcTypeName}}<#if key_has_next> AND</#if></#list>
     </select>
+</#if>
 
+<#if tableConfiguration.deleteByPrimaryKeyStatementEnabled>
     <delete id="${props.deleteByPrimaryKeyStatementId ! deleteByPrimaryKeyStatementId}" parameterType="${javaModelPackage}.${domainObjectName}">
         DELETE FROM ${tableConfiguration.tableName}
          WHERE <#list primaryKeyColumns as key>${key.actualColumnName} = <#noparse>#{</#noparse>key.javaProperty},${key.jdbcTypeName}}<#if key_has_next> AND</#if></#list>
     </delete>
+</#if>
 
+<#if tableConfiguration.deleteByExampleStatementEnabled>
     <delete id="${props.deleteByExampleStatementId ! deleteByExampleStatementId}" parameterType="${javaModelPackage}.${domainObjectName}">
         DELETE FROM ${tableConfiguration.tableName}
         <where>
@@ -83,7 +92,9 @@
             </#list>
         </where>
     </delete>
+</#if>
 
+<#if tableConfiguration.insertStatementEnabled>
     <insert id="${props.insertStatementId ! insertStatementId}" parameterType="${javaModelPackage}.${domainObjectName}">
         INSERT INTO ${tableConfiguration.tableName}
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -111,7 +122,9 @@
         </#list>
         </trim>
     </insert>
+</#if>
 
+<#if tableConfiguration.countByExampleStatementEnabled>
     <select id="${props.countByExampleStatementId ! countByExampleStatementId}" parameterType="${javaModelPackage}.${domainObjectName}" resultType="java.lang.Long">
         SELECT COUNT(*)
           FROM ${tableConfiguration.tableName}
@@ -123,7 +136,9 @@
             </#list>
         </where>
     </select>
+</#if>
 
+<#if tableConfiguration.updateByExampleStatementEnabled>
     <update id="${props.updateByExampleSelectiveStatementId ! updateByExampleSelectiveStatementId}" parameterType="map">
         UPDATE ${tableConfiguration.tableName}
            <set>
@@ -155,7 +170,9 @@
             </#list>
         </where>
     </update>
+</#if>
 
+<#if tableConfiguration.updateByPrimaryKeyStatementEnabled>
     <update id="${props.updateByPrimaryKeySelectiveStatementId ! updateByPrimaryKeySelectiveStatementId}" parameterType="${javaModelPackage}.${domainObjectName}">
         UPDATE ${tableConfiguration.tableName}
         <set>
@@ -187,4 +204,5 @@
                ${column.actualColumnName} = <#noparse>#{</#noparse>${column.javaProperty},${column.jdbcTypeName}}<#if column_has_next> AND</#if>
         </#list>
     </update>
+</#if>
 </mapper>
