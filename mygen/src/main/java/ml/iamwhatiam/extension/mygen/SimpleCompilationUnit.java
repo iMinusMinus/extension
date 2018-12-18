@@ -47,8 +47,8 @@ public class SimpleCompilationUnit implements CompilationUnit {
      */
     private int modifier;
 
-    public SimpleCompilationUnit(String formattedContent) {
-        this(null, formattedContent, null, Collections.<FullyQualifiedJavaType>emptySet());
+    public SimpleCompilationUnit(FullyQualifiedJavaType type, String formattedContent) {
+        this(type, formattedContent, null, Collections.<FullyQualifiedJavaType>emptySet());
     }
 
     public SimpleCompilationUnit(FullyQualifiedJavaType type, String formattedContent,
