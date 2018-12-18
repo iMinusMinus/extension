@@ -42,24 +42,24 @@
 
 <#if tableConfiguration.selectByExampleStatementEnabled>
     <select id="${props.selectByExampleWithBLOBsStatementId ! selectByExampleWithBLOBsStatementId}" parameterType="${javaModelPackage}.${domainObjectName}" resultMap="${context.sqlMapGeneratorConfiguration.properties.resultMapWithBLOBsId ! resultMapWithBLOBsId}">
-        SELECT <include ref="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" /><#if BLOBColumns?size gt 0>, <include ref="${context.sqlMapGeneratorConfiguration.properties.blobColumnListId ! blobColumnListId}" /></#if>
+        SELECT <include refid="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" /><#if BLOBColumns?size gt 0>, <include refid="${context.sqlMapGeneratorConfiguration.properties.blobColumnListId ! blobColumnListId}" /></#if>
           FROM ${tableConfiguration.tableName}
         <where>
             <#list allColumns as column>
             <if test="${column.javaProperty} != null">
-           AND ${column.actualColumnName} = <#noparse>#{</#noparse>${column.javaProperty},${column.jdbcTypeName}}
+           AND ${column.actualColumnName} = <#noparse>#{</#noparse>${column.javaProperty},jdbcType=${column.jdbcTypeName}}
             </if>
             </#list>
         </where>
     </select>
 
     <select id="${props.selectByExampleStatementId ! selectByExampleStatementId}" resultMap="${context.sqlMapGeneratorConfiguration.properties.baseResultMapId ! baseResultMapId}" parameterType="${javaModelPackage}.${domainObjectName}">
-        SELECT <include ref="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" />
+        SELECT <include refid="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" />
           FROM ${tableConfiguration.tableName}
         <where>
             <#list allColumns as column>
             <if test="${column.javaProperty} != null">
-            AND ${column.actualColumnName} = <#noparse>#{</#noparse>${column.javaProperty},${column.jdbcTypeName}}
+            AND ${column.actualColumnName} = <#noparse>#{</#noparse>${column.javaProperty},jdbcType=${column.jdbcTypeName}}
             </if>
             </#list>
         </where>
@@ -68,16 +68,16 @@
 
 <#if tableConfiguration.selectByPrimaryKeyStatementEnabled>
     <select id="${props.selectByPrimaryKeyStatementId ! selectByPrimaryKeyStatementId}" parameterType="${javaModelPackage}.${domainObjectName}" resultMap="${context.sqlMapGeneratorConfiguration.properties.resultMapWithBLOBsId ! resultMapWithBLOBsId}">
-        SELECT <include ref="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" /><#if BLOBColumns?size gt 0>, <include ref="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" /></#if>
+        SELECT <include refid="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" /><#if BLOBColumns?size gt 0>, <include refid="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" /></#if>
           FROM ${tableConfiguration.tableName}
-         WHERE <#list primaryKeyColumns as key>${key.actualColumnName} = <#noparse>#{</#noparse>key.javaProperty},${key.jdbcTypeName}}<#if key_has_next> AND</#if></#list>
+         WHERE <#list primaryKeyColumns as key>${key.actualColumnName} = <#noparse>#{</#noparse>key.javaProperty},jdbcType=${key.jdbcTypeName}}<#if key_has_next> AND</#if></#list>
     </select>
 </#if>
 
 <#if tableConfiguration.deleteByPrimaryKeyStatementEnabled>
     <delete id="${props.deleteByPrimaryKeyStatementId ! deleteByPrimaryKeyStatementId}" parameterType="${javaModelPackage}.${domainObjectName}">
         DELETE FROM ${tableConfiguration.tableName}
-         WHERE <#list primaryKeyColumns as key>${key.actualColumnName} = <#noparse>#{</#noparse>key.javaProperty},${key.jdbcTypeName}}<#if key_has_next> AND</#if></#list>
+         WHERE <#list primaryKeyColumns as key>${key.actualColumnName} = <#noparse>#{</#noparse>key.javaProperty},jdbcType=${key.jdbcTypeName}}<#if key_has_next> AND</#if></#list>
     </delete>
 </#if>
 
@@ -87,7 +87,7 @@
         <where>
             <#list allColumns as column>
             <if test="${column.javaProperty} != null">
-           AND ${column.actualColumnName} = <#noparse>#{</#noparse>${column.javaProperty},${column.jdbcTypeName}} AND
+           AND ${column.actualColumnName} = <#noparse>#{</#noparse>${column.javaProperty},jdbcType=${column.jdbcTypeName}} AND
             </if>
             </#list>
         </where>
@@ -98,10 +98,10 @@
     <insert id="${props.insertStatementId ! insertStatementId}" parameterType="${javaModelPackage}.${domainObjectName}">
         INSERT INTO ${tableConfiguration.tableName}
         <trim prefix="(" suffix=")" suffixOverrides=",">
-        <include ref="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" /><#if BLOBColumns?size gt 0>, <include ref="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" /></#if>
+        <include refid="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" /><#if BLOBColumns?size gt 0>, <include refid="${context.sqlMapGeneratorConfiguration.properties.baseColumnListId ! baseColumnListId}" /></#if>
         </trim>
         <trim prefix=" VALUES (" suffix=")" suffixOverrides=",">
-        <#list allColumns as column><#noparse>#{</#noparse>${column.javaProperty},${column.jdbcTypeName}}</#list>
+        <#list allColumns as column><#noparse>#{</#noparse>${column.javaProperty},jdbcType=${column.jdbcTypeName}}</#list>
         </trim>
     </insert>
 
@@ -117,7 +117,7 @@
         <trim prefix=" VALUES (" suffix=")" suffixOverrides=",">
         <#list allColumns as column>
             <if test="${column.javaProperty} != null">
-                <#noparse>#{</#noparse>${column.javaProperty},${column.jdbcTypeName}},
+                <#noparse>#{</#noparse>${column.javaProperty},jdbcType=${column.jdbcTypeName}},
             </if>
         </#list>
         </trim>
@@ -131,7 +131,7 @@
         <where>
             <#list allColumns as column>
             <if test="${column.javaProperty} != null">
-            AND ${column.actualColumnName} = <#noparse>#{</#noparse>${column.javaProperty},${column.jdbcTypeName}}
+            AND ${column.actualColumnName} = <#noparse>#{</#noparse>${column.javaProperty},jdbcType=${column.jdbcTypeName}}
             </if>
             </#list>
         </where>
@@ -143,13 +143,13 @@
         UPDATE ${tableConfiguration.tableName}
            <set>
                <#list allColumns as column>
-               <if test="record.${column.javaProperty} != null">${column.actualColumnName} = <#noparse>#{</#noparse>record.${column.javaProperty},${column.jdbcTypeName}},</if>
+               <if test="record.${column.javaProperty} != null">${column.actualColumnName} = <#noparse>#{</#noparse>record.${column.javaProperty},jdbcType=${column.jdbcTypeName}},</if>
                </#list>
            </set>
         <where>
             <#list allColumns as column>
             <if test="example.${column.javaProperty} != null">
-           AND ${column.actualColumnName} = <#noparse>#{</#noparse>example.${column.javaProperty},${column.jdbcTypeName}}
+           AND ${column.actualColumnName} = <#noparse>#{</#noparse>example.${column.javaProperty},jdbcType=${column.jdbcTypeName}}
             </if>
             </#list>
         </where>
@@ -159,13 +159,13 @@
         UPDATE ${tableConfiguration.tableName}
         <set>
             <#list allColumns as column>
-               ${column.actualColumnName} = <#noparse>#{</#noparse>record.${column.javaProperty},${column.jdbcTypeName}},
+               ${column.actualColumnName} = <#noparse>#{</#noparse>record.${column.javaProperty},jdbcType=${column.jdbcTypeName}},
             </#list>
         </set>
         <where>
             <#list allColumns as column>
             <if test="example.${column.javaProperty} != null">
-           AND ${column.actualColumnName} = <#noparse>#{</#noparse>example.${column.javaProperty}, ${column.jdbcTypeName}}
+           AND ${column.actualColumnName} = <#noparse>#{</#noparse>example.${column.javaProperty},jdbcType=${column.jdbcTypeName}}
             </if>
             </#list>
         </where>
@@ -179,14 +179,14 @@
             <#list allColumns as column>
                 <#if !primaryKeyColumns?seq_contains(column)>
             <if test="${column.javaProperty} != null">
-               ${column.actualColumnName} = <#noparse>#{</#noparse>${column.javaProperty},${column.jdbcTypeName}},
+               ${column.actualColumnName} = <#noparse>#{</#noparse>${column.javaProperty},jdbcType=${column.jdbcTypeName}},
             </if>
                 </#if>
             </#list>
         </set>
          WHERE
             <#list primaryKeyColumns as column>
-               ${column.actualColumnName} = <#noparse>#{</#noparse>${column.javaProperty},${column.jdbcTypeName}}<#if column_has_next> AND</#if>
+               ${column.actualColumnName} = <#noparse>#{</#noparse>${column.javaProperty},jdbcType=${column.jdbcTypeName}}<#if column_has_next> AND</#if>
             </#list>
     </update>
 
@@ -195,13 +195,13 @@
         <set>
             <#list allColumns as column>
                 <#if !primaryKeyColumns?seq_contains(column)>
-               ${column.actualColumnName} = <#noparse>#{</#noparse>record.${column.javaProperty},${column.jdbcTypeName}},
+               ${column.actualColumnName} = <#noparse>#{</#noparse>record.${column.javaProperty},jdbcType=${column.jdbcTypeName}},
                 </#if>
             </#list>
         </set>
         WHERE
         <#list primaryKeyColumns as column>
-               ${column.actualColumnName} = <#noparse>#{</#noparse>${column.javaProperty},${column.jdbcTypeName}}<#if column_has_next> AND</#if>
+               ${column.actualColumnName} = <#noparse>#{</#noparse>${column.javaProperty},jdbcType=${column.jdbcTypeName}}<#if column_has_next> AND</#if>
         </#list>
     </update>
 </#if>
