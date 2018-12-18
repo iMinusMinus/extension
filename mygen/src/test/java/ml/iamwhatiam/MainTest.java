@@ -20,7 +20,7 @@ public class MainTest {
         Connection con = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost:9001/xdb;ifexists=true", props);
         con.setAutoCommit(false);
         Statement s = con.createStatement();
-        s.execute("CREATE TABLE T_TEST (ID BIGINT, BEFORE CLOB, AFTER CLOB, CREATOR VARCHAR(16), creation_date TIMESTAMP, revisor VARCHAR(16), revision_date TIMESTAMP)");
+        s.execute("CREATE TABLE T_TEST (ID BIGINT, BEFORE CLOB, AFTER CLOB, CREATOR VARCHAR(16), creation_date TIMESTAMP, revisor VARCHAR(16), revision_date TIMESTAMP, PRIMARY KEY (id)); COMMENT ON TABLE t_test is  'test'");
         s.execute("INSERT INTO T_TEST VALUES (1, 'hehe', 'haha', 'derby', null, 'derby', null)");
         ResultSet rs = s.executeQuery("SELECT * FROM T_TEST");
         while (rs.next()) {

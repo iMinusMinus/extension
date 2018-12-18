@@ -6,7 +6,7 @@ import java.util.List;
 <#assign rootInterfaceName>
 <#if tableConfiguration.properties.rootInterface??>
 <#t>${tableConfiguration.properties.rootInterface}
-<#elseif props.rootInterface??>
+<#elseIf props.rootInterface??>
 <#t>${props.rootInterface}
 </#if>
 </#assign>
@@ -19,29 +19,37 @@ import ${rootInterface};
 <#if tableConfiguration.domainObjectName??>
 <#t>${tableConfiguration.domainObjectName}
 <#else>
-<#t>${baseRecordType?substring(baseRecordType?last_index_of(".") + 1)}
+<#t>${baseRecordType?substring(baseRecordType?lastIndexOf(".") + 1)}
 </#if>
 </#assign>
 <#assign javaClientInterfaceName>
 <#if tableConfiguration.mapperName??>
 <#t>${tableConfiguration.mapperName}
-<#elseif context.javaClientGeneratorConfiguration.configurationType?contains("MAPPER")>
-<#t>${myBatis3JavaMapperType?substring(myBatis3JavaMapperType?last_index_of(".") + 1)}
+<#elseIf context.javaClientGeneratorConfiguration.configurationType?contains("MAPPER")>
+<#t>${myBatis3JavaMapperType?substring(myBatis3JavaMapperType?lastIndexOf(".") + 1)}
 <#else>
-<#t>${DAOInterfaceType?substring(DAOInterfaceType?last_index_of(".") + 1)}
+<#t>${DAOInterfaceType?substring(DAOInterfaceType?lastIndexOf(".") + 1)}
 </#if>
 </#assign>
 <#if !baseRecordType?contains(javaClientInterfacePackage)>
 import ${javaModelPackage}.${domainObjectName};
 
 </#if>
-<#if props.markerInterface  != null && props.markerInterface != rootInterface>
+<#if props.markerInterface?? && props.markerInterface != rootInterface>
 import ${props.markerInterface};
 
 </#if>
 import org.apache.ibatis.annotations.Param;
 <#if props.annotationClass??>
 import ${props.annotationClass};
+</#if>
+
+<#if rootInterface?length gt 0 && props.markerInterface?? && props.markerInterface != rootInterface>
+<#assign superInterfaces = [rootInterface,props.markerInterface]>
+<#elseIf  rootInterface?length gt 0>
+<#assign superInterfaces=[rootInterface]>
+<#elseIf props.markerInterface??>
+<#assign superInterfaces=[props.markerInterface]>
 </#if>
 
 /**
@@ -53,9 +61,9 @@ import ${props.annotationClass};
                     Selective: insert or update when property not null
 -->
 <#if props.annotationClass??>
-@${props.annotationClass?substring(props.annotationClass?last_index_of(".") + 1)}
+@${props.annotationClass?substring(props.annotationClass?lastIndexOf(".") + 1)}
 </#if>
-public interface ${javaClientInterfaceName} <#if props.markerInterface != null || rootInterface?length gt 0>extends ${props.markerInterface?substring(props.markerInterface?last_index_of(".") + 1)}<#if props.markerInterface != rootInterface>, ${rootInterface?substring(rootInterface?last_index_of(".") + 1)}</#if> </#if>{
+public interface ${javaClientInterfaceName} <#if superInterfaces??>extends <#list superInterfaces as superInterface>${superInterface?substring(superInterface?lastIndexOf(".") + 1)}<#sep>, </#list></#if>{
 
 <#if tableConfiguration.insertStatementEnabled>
     int ${props.insertStatementId ! insertStatementId}(${domainObjectName} record);
@@ -75,6 +83,7 @@ public interface ${javaClientInterfaceName} <#if props.markerInterface != null |
     int ${props.updateByPrimaryKeyStatementId ! updateByPrimaryKeyStatementId}(@Param("record") ${domainObjectName} record, @Param("example") ${domainObjectName} example);
 
     int ${props.updateByPrimaryKeySelectiveStatementId ! updateByPrimaryKeySelectiveStatementId}(@Param("record") ${domainObjectName} record, @Param("example") ${domainObjectName} example);
+
 </#if>
 <#if tableConfiguration.updateByExampleStatementEnabled>
     int ${props.updateByExampleSelectiveStatementId ! updateByExampleSelectiveStatementId}(@Param("record") ${domainObjectName} record, @Param("example") ${domainObjectName} example);
