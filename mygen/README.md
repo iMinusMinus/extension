@@ -1,5 +1,6 @@
 # MyBatis Generator Extension
 [![Build Status](https://travis-ci.org/iMinusMinus/extension.png)](https://travis-ci.org/iMinusMinus/extension)
+
 This extension handle freemarker template, then generate java or xml file.
 It enable lombok as default, so you can make rid of plugins, like ToStringPlugin, EqualsAndHashCode.
 It does not differ xKey, x, xWithBlobs, so that it generate only one model per table!
@@ -57,6 +58,8 @@ Change mybatis-generator-maven-plugin runtime.
         -->
         <javaModelGenerator targetPackage="" targetProject="src/main/java">
             <property name="rootClass" value="" />
+            <property name="enableJpaAnnotations" value="TODO" />
+            <property name="enableValidationAnnotations" value="TODO" />
         </javaModelGenerator>  
         <!--
         <sqlMapGenerator targetPackage="" targetProject="src/main/resources" />
