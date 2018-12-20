@@ -1,5 +1,9 @@
 package ml.iamwhatiam.extension.mygen;
 
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.FileTemplateLoader;
+import freemarker.cache.MultiTemplateLoader;
+import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +36,10 @@ import java.util.List;
  * @author iMinusMinus
  */
 public class IntrospectedTableTemplateImpl extends IntrospectedTable {
+
+    private static final String CLASSPATH = "classpath:";
+
+    private static final String FILE = "file:///";
 
     protected Configuration configuration = new Configuration(Configuration.VERSION_2_3_28);
 
@@ -78,15 +86,19 @@ public class IntrospectedTableTemplateImpl extends IntrospectedTable {
         }
         //custom template path
         String templatePath = context.getProperty("templatePath");
-        configuration.setClassForTemplateLoading(getClass(), "/" + getClass().getPackage().getName().replace(".", "/"));
-        if(!StringUtility.stringHasValue(templatePath)) {
-            return;
+        boolean hasCustomTemplate = StringUtility.stringHasValue(templatePath);
+        TemplateLoader defaultTemplateLoader = new ClassTemplateLoader(getClass(), "/" + getClass().getPackage().getName().replace(".", "/"));
+        TemplateLoader[] delegates = new TemplateLoader[hasCustomTemplate ? 2 : 1];
+        delegates[delegates.length - 1] = defaultTemplateLoader;
+        if(hasCustomTemplate) {
+            try {
+                delegates[0] = newCustomTemplateLoader(templatePath);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        try {
-            configuration.setDirectoryForTemplateLoading(new File(templatePath));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        MultiTemplateLoader templateLoader = new MultiTemplateLoader(delegates);
+        configuration.setTemplateLoader(templateLoader);
     }
 
     @Override
@@ -154,6 +166,18 @@ public class IntrospectedTableTemplateImpl extends IntrospectedTable {
         abstractGenerator.setIntrospectedTable(this);
         abstractGenerator.setProgressCallback(progressCallback);
         abstractGenerator.setWarnings(warnings);
+    }
+
+    private TemplateLoader newCustomTemplateLoader(String templatePath) throws Exception {
+        TemplateLoader customTemplateLoader = null;
+        if(templatePath.startsWith(CLASSPATH)) {
+            customTemplateLoader = new ClassTemplateLoader(getClass().getClassLoader(), templatePath.substring(CLASSPATH.length()));
+        } else if(templatePath.startsWith(FILE)) {
+            customTemplateLoader = new FileTemplateLoader(new File(templatePath.substring(FILE.length())));
+        } else {
+            throw new RuntimeException("templatePath must start with 'classpath:' or 'file:///'");
+        }
+        return customTemplateLoader;
     }
 
     @Override
