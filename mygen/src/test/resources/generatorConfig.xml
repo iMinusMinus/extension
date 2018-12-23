@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
 <generatorConfiguration>
-    <properties url="file:///D:/Workspaces/IDEA/extension/mygen/src/test/resources/generatorConfig.properties" />
+    <properties url="file:///${mybatis.generator.configurationFile}/../generatorConfig.properties" />
     <context id="mygen" targetRuntime="ml.iamwhatiam.extension.mygen.IntrospectedTableTemplateImpl">
         <jdbcConnection driverClass="${spring.datasource.driverClassName}" connectionURL="${spring.datasource.url}" userId="${spring.datasource.username}" password="${spring.datasource.password}" />
         <javaModelGenerator targetPackage="ml.iamwhatiam.autogen.domain" targetProject="src/test/java">
