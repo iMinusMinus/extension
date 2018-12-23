@@ -9,11 +9,15 @@
         <jdbcConnection driverClass="${spring.datasource.driverClassName}" connectionURL="${spring.datasource.url}" userId="${spring.datasource.username}" password="${spring.datasource.password}" />
         <javaModelGenerator targetPackage="ml.iamwhatiam.autogen.domain" targetProject="src/test/java">
             <property name="rootClass" value="ml.iamwhatiam.AbstractEntity" />
+            <property name="jpaAnnotation" value="IMPLIED" />
+            <property name="beanValidationAnnotation" value="true" />
         </javaModelGenerator>
         <sqlMapGenerator targetPackage="ml.iamwhatiam.autogen.dao"  targetProject="src/test/resources/">
         </sqlMapGenerator>
         <javaClientGenerator type="XMLMAPPER" targetPackage="ml.iamwhatiam.autogen.dao"  targetProject="src/test/java">
         </javaClientGenerator>
-        <table tableName="t_test" domainObjectName="TestDomain" ></table>
+        <table tableName="t_test" domainObjectName="TestDomain" >
+            <columnOverride column="BEFORE" property="prev" />
+        </table>
     </context>
 </generatorConfiguration>

@@ -19,16 +19,16 @@ import ${rootInterface};
 <#if tableConfiguration.domainObjectName??>
 <#t>${tableConfiguration.domainObjectName}
 <#else>
-<#t>${baseRecordType?substring(baseRecordType?lastIndexOf(".") + 1)}
+<#t>${baseRecordType?keepAfterLast(".")}
 </#if>
 </#assign>
 <#assign javaClientInterfaceName>
 <#if tableConfiguration.mapperName??>
 <#t>${tableConfiguration.mapperName}
 <#elseIf context.javaClientGeneratorConfiguration.configurationType?contains("MAPPER")>
-<#t>${myBatis3JavaMapperType?substring(myBatis3JavaMapperType?lastIndexOf(".") + 1)}
+<#t>${myBatis3JavaMapperType?keepAfterLast(".")}
 <#else>
-<#t>${DAOInterfaceType?substring(DAOInterfaceType?lastIndexOf(".") + 1)}
+<#t>${DAOInterfaceType?keepAfterLast(".")}
 </#if>
 </#assign>
 <#if !baseRecordType?contains(javaClientInterfacePackage)>
@@ -61,9 +61,9 @@ import ${props.annotationClass};
                     Selective: insert or update when property not null
 -->
 <#if props.annotationClass??>
-@${props.annotationClass?substring(props.annotationClass?lastIndexOf(".") + 1)}
+@${props.annotationClass?keepAfterLast(".")}
 </#if>
-public interface ${javaClientInterfaceName} <#if superInterfaces??>extends <#list superInterfaces as superInterface>${superInterface?substring(superInterface?lastIndexOf(".") + 1)}<#sep>, </#list></#if>{
+public interface ${javaClientInterfaceName} <#if superInterfaces??>extends <#list superInterfaces as superInterface>${superInterface?keepAfterLast(".")}<#sep>, </#list></#if>{
 
 <#if tableConfiguration.insertStatementEnabled>
     int ${props.insertStatementId ! insertStatementId}(${domainObjectName} record);

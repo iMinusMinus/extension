@@ -58,8 +58,8 @@ Change mybatis-generator-maven-plugin runtime.
         -->
         <javaModelGenerator targetPackage="" targetProject="src/main/java">
             <property name="rootClass" value="" />
-            <property name="enableJpaAnnotations" value="TODO" />
-            <property name="enableValidationAnnotations" value="TODO" />
+            <property name="jpaAnnotation" value="ALWAYS|IMPLIED" />
+            <property name="beanValidationAnnotation" value="true" />
         </javaModelGenerator>  
         <!--
         <sqlMapGenerator targetPackage="" targetProject="src/main/resources" />

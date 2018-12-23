@@ -5,7 +5,7 @@
 <#if tableConfiguration.domainObjectName??>
 <#t>${tableConfiguration.domainObjectName}
 <#else>
-<#t>${baseRecordType?substring(baseRecordType?last_index_of(".") + 1)}
+<#t>${baseRecordType?keep_after_last(".")}
 </#if>
 </#assign>
 <mapper namespace="${myBatis3SqlMapNamespace}">

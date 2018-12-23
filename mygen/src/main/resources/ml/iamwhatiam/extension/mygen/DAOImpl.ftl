@@ -12,7 +12,7 @@ package ${javaClientImplementationPackage};
 <#if tableConfiguration.domainObjectName??>
 <#t>${tableConfiguration.domainObjectName}
 <#else>
-<#t>${baseRecordType?substring(baseRecordType?last_index_of(".") + 1)}
+<#t>${baseRecordType?keep_after_last(".")}
  </#if>
 </#assign>
 <#if !baseRecordType?contains(javaClientImplementationPackage)>
@@ -26,7 +26,7 @@ import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Repository;
 
 /**
- * @author <#if context.properties.author??>${context.properties.author}<#else>mbg.generated</#if>
+ * @author ${context.properties.author!'mbg.generated'}
  * @date ${.now?date}
  */
 @Repository
